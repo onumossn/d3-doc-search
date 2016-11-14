@@ -15,6 +15,7 @@ export class AppComponent {
 	errorMessage: string = '';
 	menuMode: string = 'side';
 	menuOpened: boolean = true;
+	loading: boolean = true;
 
 	@HostListener('window:resize', ['$event'])
 	onResize(event: any) {
@@ -78,7 +79,9 @@ export class AppComponent {
 			this.menuOpened = false;
 		}
 
-		if (!this.docModel || (Date.now() - resetTime) > (8 * 60 * 60 * 1000)) {
+		if (this.docModel && (Date.now() - resetTime) <= (8 * 60 * 60 * 1000)) {
+			this.loading = false; 
+		} else {
 			http.get('https://api.github.com/repos/d3/d3/contents/API.md?ref=master', requestOptions)
 				.subscribe(indexResp => {
 					let anchors: NodeListOf<Element>;
@@ -201,8 +204,15 @@ export class AppComponent {
 							window.localStorage.setItem('github.d3.doc.model', JSON.stringify(this.docModel));
 						},
 						this.githubRequestErrorHandler.bind(this),
-						this.onFilterTextChange.bind(this, this.filterText));
-				}, this.githubRequestErrorHandler.bind(this))
+						() => {
+							this.loading = false;
+							this.onFilterTextChange(this.filterText);
+						});
+				},
+				(err) => {
+					this.githubRequestErrorHandler(err);
+					this.loading = false;
+				});
 		}
 	}
 }
