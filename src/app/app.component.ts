@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { Headers, Http } from '@angular/http';
+import { Headers, URLSearchParams, Http } from '@angular/http';
 import { Observable } from "rxjs";
 import * as _ from "lodash";
 
@@ -62,8 +62,14 @@ export class AppComponent {
 	}
 
 	constructor(public http: Http) {
-		let headers = new Headers({ Accept: 'application/vnd.github.VERSION.html' })
+		let requestOptions:any = {
+			headers: new Headers({ Accept: 'application/vnd.github.VERSION.html' }),
+			search: new URLSearchParams()
+		};
 		let resetTime = _.parseInt(window.localStorage.getItem('github.rate.reset'));
+
+		requestOptions.search.set('client_id', '3b79965190bb8e4aa558');
+		requestOptions.search.set('client_secret', '3d415c9c0125bfca905264998aaa347826b7f96e');
 
 		this.filteredDocModel = this.docModel = JSON.parse(window.localStorage.getItem('github.d3.doc.model'));
 
@@ -73,7 +79,7 @@ export class AppComponent {
 		}
 
 		if (!this.docModel || (Date.now() - resetTime) > (8 * 60 * 60 * 1000)) {
-			http.get('https://api.github.com/repos/d3/d3/contents/API.md?ref=master', { headers: headers })
+			http.get('https://api.github.com/repos/d3/d3/contents/API.md?ref=master', requestOptions)
 				.subscribe(indexResp => {
 					let anchors: NodeListOf<Element>;
 					let levelList: any[][] = [[], [], [], [], [], [], []];
@@ -125,7 +131,7 @@ export class AppComponent {
 
 					docModel.forEach((indexItem: any, j: number) => {
 						let section: string = indexItem.link.split('/');
-						let request = http.get(`https://api.github.com/repos/d3/${section[section.length - 1].split('#')[0]}/contents/README.md?ref=master`, { headers: headers });
+						let request = http.get(`https://api.github.com/repos/d3/${section[section.length - 1].split('#')[0]}/contents/README.md?ref=master`, requestOptions);
 
 						readmeObservables.push(request);
 
@@ -193,9 +199,10 @@ export class AppComponent {
 						.subscribe(() => {
 							this.docModel = docModel;
 							window.localStorage.setItem('github.d3.doc.model', JSON.stringify(this.docModel));
-						}, this.githubRequestErrorHandler.bind(this))
-						.finally(this.onFilterTextChange.bind(this, this.filterText));
-				}, this.githubRequestErrorHandler.bind(this));
+						},
+						this.githubRequestErrorHandler.bind(this),
+						this.onFilterTextChange.bind(this, this.filterText));
+				}, this.githubRequestErrorHandler.bind(this))
 		}
 	}
 }
