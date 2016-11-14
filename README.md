@@ -1,5 +1,7 @@
 # D3DocSearch
 
+This application uses the github API to get d3 documentation to create a searchable API reference. Due to githubs API rate limit, it uses localStorage to store the documentation and updates at most once every 8 hours.
+
 This project was generated with [angular-cli](https://github.com/angular/angular-cli) version 1.0.0-beta.19-3.
 
 ## Development server

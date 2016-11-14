@@ -1,10 +1,11 @@
 <md-toolbar color="primary" style="position: relative; z-index: 1">
-  <button [hidden]="errorMessage" md-icon-button (click)="menu.toggle()"><md-icon>menu</md-icon></button>
+  <button md-icon-button (click)="menu.toggle()"><md-icon>menu</md-icon></button>
   <h1>D3 Doc Search</h1>
 </md-toolbar>
-<md-sidenav-layout [hidden]="errorMessage">
+<md-sidenav-layout>
   <md-sidenav #menu [mode]="menuMode" [opened]="menuOpened">
-    <md-input [(ngModel)]="filterText" (ngModelChange)="onFilterTextChange(filterText)" placeholder="Search" floatingPlaceholder="false" style="width: 100%">
+    <md-input [(ngModel)]="filterText" (ngModelChange)="onFilterTextChange(filterText)" placeholder="Search" floatingPlaceholder="false"
+      style="width: 100%">
       <span md-prefix><md-icon>search</md-icon></span>
     </md-input>
     <section *ngFor="let item of filteredDocModel">
@@ -14,6 +15,7 @@
       </md-nav-list>
     </section>
   </md-sidenav>
+  <div *ngIf="errorMessage" style="padding: 15px; text-align: center">Error: {{errorMessage}}</div>
   <section *ngFor="let item of filteredDocModel">
     <md-toolbar color="accent">
       <a [name]="item.name">&nbsp;</a>
@@ -30,4 +32,3 @@
     </div>
   </section>
 </md-sidenav-layout>
-<div [hidden]="!errorMessage" style="padding: 15px; text-align: center">Error: {{errorMessage}}</div>
