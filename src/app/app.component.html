@@ -1,3 +1,33 @@
-<h1>
-  {{title}}
-</h1>
+<md-toolbar color="primary" style="position: relative; z-index: 1">
+  <button [hidden]="errorMessage" md-icon-button (click)="menu.toggle()"><md-icon>menu</md-icon></button>
+  <h1>D3 Doc Search</h1>
+</md-toolbar>
+<md-sidenav-layout [hidden]="errorMessage">
+  <md-sidenav #menu [mode]="menuMode" [opened]="menuOpened">
+    <md-input [(ngModel)]="filterText" (ngModelChange)="onFilterTextChange(filterText)" placeholder="Search" floatingPlaceholder="false" style="width: 100%">
+      <span md-prefix><md-icon>search</md-icon></span>
+    </md-input>
+    <section *ngFor="let item of filteredDocModel">
+      <h2 md-subheader><a href="#{{item.name}}">{{item.name}}</a></h2>
+      <md-nav-list>
+        <a md-list-item *ngFor="let child of item.children" href="#{{child.links && child.links[0]}}" (click)="onMenuClick(menu)">{{child.name}}</a>
+      </md-nav-list>
+    </section>
+  </md-sidenav>
+  <section *ngFor="let item of filteredDocModel">
+    <md-toolbar color="accent">
+      <a [name]="item.name">&nbsp;</a>
+      <h2>{{item.name}}</h2>
+    </md-toolbar>
+    <div style="padding:0px 15px;">
+      <md-card *ngFor="let child of item.children" class="markdown-body" style="margin: 15px 0px;">
+        <md-card-title>
+          <a [name]="link" *ngFor="let link of child.links"></a>
+          {{child.name}}
+        </md-card-title>
+        <md-card-content [innerHTML]="child.elemList"></md-card-content>
+      </md-card>
+    </div>
+  </section>
+</md-sidenav-layout>
+<div [hidden]="!errorMessage" style="padding: 15px; text-align: center">Error: {{errorMessage}}</div>

@@ -1,0 +1,33 @@
+h1 {
+  font-size: 28px;
+}
+
+md-toolbar {
+  box-shadow: 0 4px 5px 0 rgba(0, 0, 0, 0.14), 0 1px 10px 0 rgba(0, 0, 0, 0.12), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+}
+
+md-sidenav-layout {
+  height: calc(100vh - 64px);
+}
+
+md-sidenav {
+  width: calc(100% - 24px);
+  min-width: 262px;
+  padding: 0px 15px;
+  overflow-x: hidden;
+  overflow-wrap: break-word;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+
+@media (min-width: 544px) {
+  md-sidenav {
+    width: 40vw;
+  }
+}
+
+@media (min-width: 768px) {
+  md-sidenav {
+    width: 25vw;
+  }
+}
