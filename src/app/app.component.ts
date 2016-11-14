@@ -66,6 +66,7 @@ export class AppComponent {
 		let resetTime = _.parseInt(window.localStorage.getItem('github.rate.reset'));
 
 		this.filteredDocModel = this.docModel = JSON.parse(window.localStorage.getItem('github.d3.doc.model'));
+
 		if (window.innerWidth <= 544) {
 			this.menuMode = 'over';
 			this.menuOpened = false;
@@ -78,10 +79,10 @@ export class AppComponent {
 					let levelList: any[][] = [[], [], [], [], [], [], []];
 					let wrapper: Element = document.createElement('div');
 					let headerTags: string[] = [2, 3, 4, 5, 6].map(n => `H${n}`);
+					let readmeObservables = [];
+					let docModel = [];
 					wrapper.innerHTML = indexResp.text();
 					anchors = wrapper.querySelectorAll('.markdown-body a.anchor');
-
-					this.filteredDocModel = this.docModel = [];
 
 					window.localStorage.setItem('github.rate.reset', (1000 * _.parseInt(indexResp.headers.get('X-RateLimit-Reset'))).toString());
 
@@ -100,7 +101,7 @@ export class AppComponent {
 
 							if (anchor.tagName === 'H2') {
 								item.level = 2;
-								this.docModel.push(item);
+								docModel.push(item);
 								levelList[2].push(item)
 							} else {
 								let level: number = parseFloat(anchor.tagName[1]);
@@ -122,10 +123,13 @@ export class AppComponent {
 						}
 					}
 
-					this.docModel.forEach((indexItem: any, j: number) => {
-						let promise;
+					docModel.forEach((indexItem: any, j: number) => {
 						let section: string = indexItem.link.split('/');
-						http.get(`https://api.github.com/repos/d3/${section[section.length - 1].split('#')[0]}/contents/README.md?ref=master`, { headers: headers })
+						let request = http.get(`https://api.github.com/repos/d3/${section[section.length - 1].split('#')[0]}/contents/README.md?ref=master`, { headers: headers });
+
+						readmeObservables.push(request);
+
+						request
 							.subscribe(resp => {
 								let content: Element = document.createElement('div');
 								let items: Element[] = [];
@@ -182,10 +186,15 @@ export class AppComponent {
 									.compact()
 									.uniqBy('name')
 									.value();
-								window.localStorage.setItem('github.d3.doc.model', JSON.stringify(this.docModel));
-								this.onFilterTextChange(this.filterText);
-							}, this.githubRequestErrorHandler.bind(this));
+							});
 					});
+
+					Observable.forkJoin.apply(this, readmeObservables)
+						.subscribe(() => {
+							this.docModel = docModel;
+							window.localStorage.setItem('github.d3.doc.model', JSON.stringify(this.docModel));
+						}, this.githubRequestErrorHandler.bind(this))
+						.finally(this.onFilterTextChange.bind(this, this.filterText));
 				}, this.githubRequestErrorHandler.bind(this));
 		}
 	}
