@@ -1,6 +1,6 @@
 <md-progress-circle *ngIf="loading" mode="indeterminate"></md-progress-circle>
 <md-toolbar color="primary" style="position: relative; z-index: 1">
-  <button md-icon-button (click)="menu.toggle()"><md-icon>menu</md-icon></button>
+  <button md-icon-button (click)="menu.toggle()" md-tooltip="Toggle Menu"><md-icon>menu</md-icon></button>
   <h1>D3 Doc Search</h1>
 </md-toolbar>
 <md-sidenav-layout>
@@ -18,18 +18,20 @@
   </md-sidenav>
   <div *ngIf="errorMessage" style="padding: 15px; text-align: center">Error: {{errorMessage}}</div>
   <section *ngFor="let item of filteredDocModel">
+    <a [name]="item.name" style="display: block; height: 0px"></a>
     <md-toolbar color="accent">
-      <a [name]="item.name">&nbsp;</a>
       <h2>{{item.name}}</h2>
+      <span class="fill-remaining-space"></span>
+      <a [href]="item.link" md-icon-button md-tooltip="{{item.name}} Repository" style="padding-top: 8px"><md-icon>code</md-icon></a>
     </md-toolbar>
     <div style="padding:0px 15px;">
-      <md-card *ngFor="let child of item.children" class="markdown-body" style="margin: 15px 0px;">
-        <md-card-title>
-          <a [name]="link" *ngFor="let link of child.links"></a>
-          {{child.name}}
-        </md-card-title>
-        <md-card-content [innerHTML]="child.elemList"></md-card-content>
-      </md-card>
+      <div *ngFor="let child of item.children" style="margin: 15px 0px;">
+        <a [name]="link" *ngFor="let link of child.links" style="display: block; height: 0px"></a>
+        <md-card class="markdown-body">
+          <md-card-title>{{child.name}}</md-card-title>
+          <md-card-content [innerHTML]="child.elemList"></md-card-content>
+        </md-card>
+      </div>
     </div>
   </section>
 </md-sidenav-layout>

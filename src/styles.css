@@ -31,3 +31,7 @@ a:hover, a:active {
 .md-input-placeholder {
   top: 4px !important;
 }
+
+.fill-remaining-space {
+  flex: 1 1 auto;
+}
