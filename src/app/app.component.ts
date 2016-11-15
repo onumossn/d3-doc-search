@@ -29,17 +29,18 @@ export class AppComponent {
 	}
 
 	onFilterTextChange(filterText: string) {
+		filterText = filterText.toLowerCase();
 		this.filteredDocModel = _(this.docModel)
 			.map((model: any) => {
 				let filteredChildern: any[];
 				let transformed: any = {};
 
-				if (model.name.indexOf(filterText) !== -1) {
+				if (model.name.toLowerCase().indexOf(filterText) !== -1) {
 					return model;
 				}
 
 				filteredChildern = _.filter(model.children, (child: any) => {
-					return child.name.indexOf(filterText) !== -1;
+					return child.name.toLowerCase().indexOf(filterText) !== -1;
 				});
 
 				if (filteredChildern.length === 0) {
