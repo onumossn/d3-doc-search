@@ -10,7 +10,7 @@
       <span md-prefix><md-icon>search</md-icon></span>
     </md-input>
     <section *ngFor="let item of filteredDocModel">
-      <h2 md-subheader><a href="#{{item.name}}">{{item.name}}</a></h2>
+      <h2 md-subheader><a href="#{{item.name}}" (click)="onMenuClick(menu)">{{item.name}}</a></h2>
       <md-nav-list>
         <a md-list-item *ngFor="let child of item.children" href="#{{child.links && child.links[0]}}" (click)="onMenuClick(menu)">{{child.name}}</a>
       </md-nav-list>
