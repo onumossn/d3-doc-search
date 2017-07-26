@@ -1,18 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
-@import '~@angular/material/core/theming/prebuilt/deeppurple-amber.css';
+@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
 
 body {
   overflow: hidden;
-  line-height: 20px;
   min-width: 0px;
+  margin: 0;
 }
 
 h1, h2, h3, h4, h5, h6, label {
   font-weight: normal;
-}
-
-a:hover, a:active {
-  text-decoration: none;
 }
 
 .markdown-body {
@@ -26,10 +22,6 @@ a:hover, a:active {
 
 .md-input-infix {
   vertical-align: middle;
-}
-
-.md-input-placeholder {
-  top: 4px !important;
 }
 
 .fill-remaining-space {

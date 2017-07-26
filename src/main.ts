@@ -1,4 +1,5 @@
-import './polyfills.ts';
+import 'hammerjs';
+import './polyfills';
 
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { enableProdMode } from '@angular/core';

@@ -1,14 +1,14 @@
-<md-progress-circle *ngIf="loading" mode="indeterminate"></md-progress-circle>
+<md-progress-spinner *ngIf="loading" mode="indeterminate"></md-progress-spinner>
 <md-toolbar color="primary" style="position: relative; z-index: 1">
   <button md-icon-button (click)="menu.toggle()" md-tooltip="Toggle Menu"><md-icon>menu</md-icon></button>
   <h1>D3 Doc Search</h1>
 </md-toolbar>
-<md-sidenav-layout>
+<md-sidenav-container>
   <md-sidenav #menu [mode]="menuMode" [opened]="menuOpened">
-    <md-input [(ngModel)]="filterText" (ngModelChange)="onFilterTextChange(filterText)" placeholder="Search" floatingPlaceholder="false"
-      style="width: 100%">
-      <span md-prefix><md-icon>search</md-icon></span>
-    </md-input>
+    <md-input-container style="width:100%; margin-top: 20px">
+      <span mdPrefix><md-icon>search</md-icon></span>
+      <input mdInput [(ngModel)]="filterText" (ngModelChange)="onFilterTextChange(filterText)" placeholder="Search" />
+    </md-input-container>
     <section *ngFor="let item of filteredDocModel">
       <h2 md-subheader><a href="#{{item.name}}" (click)="onMenuClick(menu)">{{item.name}}</a></h2>
       <md-nav-list>
@@ -22,7 +22,7 @@
     <md-toolbar color="accent">
       <h2>{{item.name}}</h2>
       <span class="fill-remaining-space"></span>
-      <a [href]="item.link" md-icon-button md-tooltip="{{item.name}} Repository" style="padding-top: 8px"><md-icon>code</md-icon></a>
+      <a [href]="item.link" md-icon-button md-tooltip="{{item.name}} Repository"><md-icon>code</md-icon></a>
     </md-toolbar>
     <div style="padding:0px 15px;">
       <div *ngFor="let child of item.children" style="margin: 15px 0px;">
@@ -34,4 +34,4 @@
       </div>
     </div>
   </section>
-</md-sidenav-layout>
+</md-sidenav-container>
