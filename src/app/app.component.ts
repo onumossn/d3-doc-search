@@ -103,33 +103,35 @@ export class AppComponent {
 							anchor = anchor.parentElement;
 						}
 						if (anchor) {
-							item = {
-								name: anchor.textContent.split('(')[0].trim(),
-								link: anchor.querySelector('a:not(.anchor)').getAttribute('href'),
-								children: []
-							};
+							try {
+								item = {
+									name: anchor.textContent.split('(')[0].trim(),
+									link: anchor.querySelector('a:not(.anchor)').getAttribute('href'),
+									children: []
+								};
 
-							if (anchor.tagName === 'H2') {
-								item.level = 2;
-								docModel.push(item);
-								levelList[2].push(item)
-							} else {
-								let level: number = parseFloat(anchor.tagName[1]);
-								let leveli: number = level - 1;
-								let parent: any;
+								if (anchor.tagName === 'H2') {
+									item.level = 2;
+									docModel.push(item);
+									levelList[2].push(item)
+								} else {
+									let level: number = parseFloat(anchor.tagName[1]);
+									let leveli: number = level - 1;
+									let parent: any;
 
-								while (!parent && leveli > 1) {
-									let levelRow = levelList[leveli];
-									parent = levelRow[levelRow.length - 1];
-									leveli--;
+									while (!parent && leveli > 1) {
+										let levelRow = levelList[leveli];
+										parent = levelRow[levelRow.length - 1];
+										leveli--;
+									}
+
+									if (parent) {
+										item.level = level;
+										levelList[level].push(item);
+										parent.children.push(item);
+									}
 								}
-
-								if (parent) {
-									item.level = level;
-									levelList[level].push(item);
-									parent.children.push(item);
-								}
-							}
+							} catch(e) {}
 						}
 					}
 
